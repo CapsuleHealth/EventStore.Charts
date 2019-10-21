@@ -47,6 +47,8 @@ admin:
   ## or using `--set admin.password=<your admin password>.
   # password: changeit
   ##
+  ## Annotations for the admin service
+  serviceAnnotations: {}
   ## Service type for admin interface.
   serviceType: ClusterIP
   ##
@@ -70,6 +72,12 @@ podDisruptionBudget:
   ## Number of pods that can be unavailable after eviction.
   # maxUnavailable: 1
 ##
+## Defines the eventstore service. If the NodePort service type is used externalTrafficPolicy 
+## should be set to "Local" so that requests are proxied to local endpoints.
+esService:
+  type: ClusterIP
+  externalTrafficPolicy:
+  annotations: {}
 ## External IP Address. Remove or set to `null` to disable connections from outside the cluster.
 extIp: 0.0.0.0
 ##
@@ -123,6 +131,15 @@ persistence:
   size: 8Gi
   mountPath: /var/lib/eventstore
   annotations: {}
+
+# Ingress for the admin service
+ingress:
+  enabled: false
+  annotations: {}
+  hosts: []
+    # - host: admin.eventstore.local
+    #   paths:
+    #     path: /
 
 resources: {}
   ## If you want to specify resources, uncomment the following
