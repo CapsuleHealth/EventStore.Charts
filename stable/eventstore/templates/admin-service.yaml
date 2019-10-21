@@ -9,6 +9,10 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/component: admin
+{{- if .Values.admin.serviceAnnotations }}
+  annotations:
+{{ toYaml .Values.admin.serviceAnnotations | indent 4 }}
+{{- end }}
 spec:
   type: {{ .Values.admin.serviceType }}
   selector:
