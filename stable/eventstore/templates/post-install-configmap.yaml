@@ -13,7 +13,7 @@ data:
   post-install.sh: |
     #!/bin/bash
     set -e
-    endpoint="http://{{ include "eventstore.dns" . }}:{{ .Values.extHttpPort }}"
+    endpoint="http://{{ include "eventstore.dns" . }}:{{ .Values.ports.extHttpPort }}"
     # wait until the admin user is available
     while [[ "$(curl -s -o /dev/null -w '%{http_code}' $endpoint/users/admin)" != "200" ]]; do 
     echo "waiting for Event Store at $endpoint..."
