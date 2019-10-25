@@ -75,23 +75,23 @@ podDisruptionBudget:
 ## Defines the eventstore service. If the NodePort service type is used externalTrafficPolicy 
 ## should be set to "Local" so that requests are proxied to local endpoints.
 esService:
-  type: ClusterIP
-  externalTrafficPolicy:
   annotations: {}
 ## External IP Address. Remove or set to `null` to disable connections from outside the cluster.
 extIp: 0.0.0.0
 ##
-## Internal HTTP port.
-intHttpPort: 2112
-##
-## External HTTP port.
-extHttpPort: 2113
-##
-## Internal TCP port.
-intTcpPort: 1112
-##
-## External TCP port.
-extTcpPort: 1113
+
+ports:
+  ## Internal HTTP port.
+  intHttpPort: 2112
+  ##
+  ## External HTTP port.
+  extHttpPort: 2113
+  ##
+  ## Internal TCP port.
+  intTcpPort: 1112
+  ##
+  ## External TCP port.
+  extTcpPort: 1113
 ##
 ## The amount of drift, in ms, between clocks on nodes allowed before gossip is rejected.
 gossipAllowedDiffMs: 600000

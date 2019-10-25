@@ -20,14 +20,11 @@ spec:
   ports:
     - name: ext-tcp-port
       protocol: TCP
-      port: {{ .Values.extTcpPort }}
-      targetPort: {{ .Values.extTcpPort }}
+      port: {{ .Values.ports.extTcpPort }}
+      targetPort: {{ .Values.ports.extTcpPort }}
     - name: ext-http-port
       protocol: TCP
-      port: {{ .Values.extHttpPort }}
-      targetPort: {{ .Values.extHttpPort }}
+      port: {{ .Values.ports.extHttpPort }}
+      targetPort: {{ .Values.ports.extHttpPort }}
   type: {{ .Values.esService.type }}
-{{- if eq .Values.esService.type "NodePort" }}
   clusterIP: None
-  externalTrafficPolicy: {{ .Values.esService.externalTrafficPolicy }}
-{{- end }}

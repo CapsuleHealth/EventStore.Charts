@@ -30,7 +30,7 @@ spec:
       annotations:
 {{ toYaml .Values.podAnnotations | indent 8 }}
       {{- end }}
-    spec:      
+    spec:
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
       affinity:
@@ -70,21 +70,28 @@ spec:
                   fieldPath: status.podIP
           {{- end }}
           ports:
-            - containerPort: {{ .Values.intTcpPort }}
-            - containerPort: {{ .Values.extTcpPort }}
-            - containerPort: {{ .Values.intHttpPort }}
-            - containerPort: {{ .Values.extHttpPort }}
+          {{- if .Values.hostPort }}
+          {{- range .Values.ports }}
+            - containerPort: {{ . }}
+              hostPort: {{ . }}
+          {{- end }}
+          {{ else }}
+            - containerPort: {{ .Values.ports.intTcpPort }}
+            - containerPort: {{ .Values.ports.extTcpPort }}
+            - containerPort: {{ .Values.ports.intHttpPort }}
+            - containerPort: {{ .Values.ports.extHttpPort }}
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /stats
-              port: {{ .Values.extHttpPort }}
+              port: {{ .Values.ports.extHttpPort }}
             initialDelaySeconds: 15
             timeoutSeconds: 5
             periodSeconds: 15
           readinessProbe:
             httpGet:
               path: /stats
-              port: {{ .Values.extHttpPort }}
+              port: {{ .Values.ports.extHttpPort }}
             initialDelaySeconds: 15
             timeoutSeconds: 5
             periodSeconds: 15

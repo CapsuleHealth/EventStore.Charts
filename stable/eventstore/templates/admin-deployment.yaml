@@ -38,18 +38,18 @@ spec:
               mountPath: "/etc/nginx/conf.d"
               readOnly: true
           ports:
-            - containerPort: {{ .Values.extHttpPort }}
+            - containerPort: {{ .Values.ports.extHttpPort }}
           livenessProbe:
             httpGet:
               path: /_liveness
-              port: {{ .Values.extHttpPort }}
+              port: {{ .Values.ports.extHttpPort }}
             initialDelaySeconds: 15
             timeoutSeconds: 1
             periodSeconds: 15
           readinessProbe:
             httpGet:
               path: /_readiness
-              port: {{ .Values.extHttpPort }}
+              port: {{ .Values.ports.extHttpPort }}
             initialDelaySeconds: 15
             timeoutSeconds: 5
             periodSeconds: 15

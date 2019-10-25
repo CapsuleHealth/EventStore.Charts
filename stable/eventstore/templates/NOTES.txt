@@ -10,9 +10,9 @@ You can access Event Store:
   * Within your cluster, using the following URI:
 
     {{ if gt .Values.clusterSize 1.0 }}
-    discover://{{ include "eventstore.dns" . }}:{{ .Values.extHttpPort }}
+    discover://{{ include "eventstore.dns" . }}:{{ .Values.ports.extHttpPort }}
     {{ else }}
-    tcp://{{ include "eventstore.dns" . }}:{{ .Values.extTcpPort }}
+    tcp://{{ include "eventstore.dns" . }}:{{ .Values.ports.extTcpPort }}
     {{ end }}
 
     ref: https://eventstore.org/docs/dotnet-api/connecting-to-a-server/index.html#uris
@@ -32,10 +32,10 @@ You can access the Event Store admin interface:
               You can watch the status of by running 'kubectl get svc -w {{ include "eventstore.fullname" . }}-admin'
 
       export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "eventstore.fullname" . }}-admin -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-      echo http://$SERVICE_IP:{{ .Values.extHttpPort }}
+      echo http://$SERVICE_IP:{{ .Values.ports.extHttpPort }}
     {{- else if contains "ClusterIP" .Values.admin.serviceType }}
 
-      kubectl port-forward svc/{{ include "eventstore.fullname" . }}-admin {{ .Values.extHttpPort }}
+      kubectl port-forward svc/{{ include "eventstore.fullname" . }}-admin {{ .Values.ports.extHttpPort }}
     {{- end }}
     {{- if not .Values.admin.password }}
 
