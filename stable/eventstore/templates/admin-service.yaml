@@ -14,6 +14,9 @@ metadata:
 {{ toYaml .Values.admin.serviceAnnotations | indent 4 }}
 {{- end }}
 spec:
+{{- if .Values.admin.stickySessions }}
+  sessionAffinity: ClientIP
+{{- end }}
   type: {{ .Values.admin.serviceType }}
   selector:
     app.kubernetes.io/name: {{ include "eventstore.name" . }}-admin

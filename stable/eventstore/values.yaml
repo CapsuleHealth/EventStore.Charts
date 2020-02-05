@@ -58,6 +58,8 @@ admin:
   ##
   ## The dns resolver which is being used in the cluster (e.g., kube-dns, coredns)
   dnsResolver: kube-dns
+  stickySessions: true
+
 ##
 ## Configure a pod disruption budget for the Event Store StatefulSet.
 ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
@@ -79,6 +81,8 @@ esService:
 ## External IP Address. Remove or set to `null` to disable connections from outside the cluster.
 extIp: 0.0.0.0
 ##
+hostNetwork: false
+hostPort: true
 
 ports:
   ## Internal HTTP port.
@@ -140,6 +144,26 @@ ingress:
     # - host: admin.eventstore.local
     #   paths:
     #     path: /
+
+monitoring:
+  enabled: false
+  exporter:
+    image: marcinbudny/eventstore_exporter
+    imageTag: 0.7.0
+    imagePullPolicy: Always
+    user: prometheus
+    password: ""
+    port: 9448
+    resources: {}
+      # requests:
+      #   cpu: 10m
+      #   memory: 64Mi
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+  serviceMonitor:
+    interval: 30s
+
 
 resources: {}
   ## If you want to specify resources, uncomment the following
