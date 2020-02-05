@@ -31,6 +31,10 @@ spec:
 {{ toYaml .Values.podAnnotations | indent 8 }}
       {{- end }}
     spec:
+    {{- if .Values.hostNetwork }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+    {{- end }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
       affinity:
@@ -41,7 +45,7 @@ spec:
       imagePullSecrets:
       {{- range .Values.imagePullSecrets }}
         - name: {{ . }}
-      {{- end}}
+      {{- end }}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -100,6 +104,18 @@ spec:
           volumeMounts:
             - name: data
               mountPath: {{ .Values.persistence.mountPath }}
+      {{- if .Values.monitoring.enabled }}
+        - name: eventstore-exporter
+          image: "{{ .Values.monitoring.exporter.image }}:{{ .Values.monitoring.exporter.imageTag }}"
+          imagePullPolicy: {{ .Values.monitoring.exporter.imagePullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "eventstore.fullname" . }}-exporter-config
+          ports:
+            - containerPort: {{ .Values.monitoring.exporter.port }}
+          resources:
+{{ toYaml .Values.monitoring.exporter.resources | indent 12 }}
+      {{- end }}
       volumes:
       {{- if (not .Values.persistence.enabled) }}
         - name: data

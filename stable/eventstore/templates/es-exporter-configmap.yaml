@@ -1,0 +1,23 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "eventstore.fullname" . }}-exporter-config
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/name: {{ include "eventstore.name" . }}
+    helm.sh/chart: {{ include "eventstore.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: exporter
+data:
+  EVENTSTORE_URL: "http://localhost:2113"
+  EVENTSTORE_USER: {{ .Values.monitoring.exporter.user }}
+  EVENTSTORE_PASSWORD: {{ .Values.monitoring.exporter.password }}
+{{- if and .Values.extIp (eq .Values.clusterSize 1.0) }}
+  CLUSTER_MODE: "single"
+  {{- else }}
+  CLUSTER_MODE: "cluster"
+{{- end }}
+  PORT: {{ .Values.monitoring.exporter.port | quote }}
+{{- end -}}

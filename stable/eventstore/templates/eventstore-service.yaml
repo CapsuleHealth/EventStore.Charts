@@ -26,5 +26,11 @@ spec:
       protocol: TCP
       port: {{ .Values.ports.extHttpPort }}
       targetPort: {{ .Values.ports.extHttpPort }}
+  {{- if .Values.monitoring.enabled }}
+    - name: metrics
+      protocol: TCP
+      port: {{ .Values.monitoring.exporter.port }}
+      targetPort: {{ .Values.monitoring.exporter.port }}
+  {{- end }}
   type: {{ .Values.esService.type }}
   clusterIP: None

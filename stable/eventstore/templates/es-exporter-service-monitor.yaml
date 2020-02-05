@@ -1,0 +1,25 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ include "eventstore.name" . }}
+    helm.sh/chart: {{ include "eventstore.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: serviceMonitor
+  name: {{ include "eventstore.fullname" . }}-service-monitor
+spec:
+  endpoints:
+  - interval: {{ .Values.monitoring.serviceMonitor.interval }}
+    path: /metrics
+    port: "metrics"
+  namespaceSelector:
+    any: false
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "eventstore.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
